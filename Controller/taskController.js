@@ -67,8 +67,50 @@ const delTask = async (req, res, next) => {
   }
 };
 
+/**
+ * trash a task using the id
+ * this is a post method change a trash property value
+ */
+const trashTask = async (req, res, next) => {
+  try {
+    const id = req.params.id;
+    const trashStatus = req.body.trashStatus;
+    const result = await Task.findOneAndUpdate(
+      { _id: new Object(id) },
+      { trash: trashStatus }
+    );
+    res.status(200).json({ message: 'success' });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * this a task status change api
+ * call this api doing a task todo to ongoing or todo to completed and more
+ */
+const handleStatusTask = async (req, res, next) => {
+  try {
+    const id = req.params.id;
+    const { status, completedAt } = req.body;
+    const updateTask = {
+      status,
+      completedAt,
+    };
+    const result = await Task.findOneAndUpdate(
+      { _id: new Object(id) },
+      updateTask
+    );
+    res.status(200).json({ message: 'success' });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   addTask,
   getTask,
   delTask,
+  trashTask,
+  handleStatusTask,
 };
